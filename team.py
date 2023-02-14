@@ -15,6 +15,13 @@ class Team():
         self.touchdown_percent = 0
         self.pat_percent = 0
 
+        self.all_time_touchdowns = 0
+        self.all_time_fieldgoals = 0
+
+        self.all_time_wins = 0
+        self.all_time_losses = 0
+        self.all_time_ties = 0
+
     def save_team_data(self, file_loc) -> None:
         team_data = {
             'city': self.city,
@@ -24,7 +31,9 @@ class Team():
             'max_drives': self.max_drives,
             'score_percent': self.score_percent,
             'touchdown_percent': self.touchdown_percent,
-            'pat_percent': self.pat_percent
+            'pat_percent': self.pat_percent,
+            'all_time_touchdowns': self.all_time_touchdowns,
+            'all_time_fieldgoals': self.all_time_fieldgoals
         }
 
         with open(file_loc, 'wb') as save_file:
@@ -42,6 +51,8 @@ class Team():
         self.score_percent = team_data['score_percent']
         self.touchdown_percent = team_data['touchdown_percent']
         self.pat_percent = team_data['pat_percent']
+        self.all_time_touchdowns = team_data['all_time_touchdowns']
+        self.all_time_fieldgoals = team_data['all_time_fieldgoals']
 
     def set_default_stats(self) -> None:
         self.min_drives = 10
@@ -53,6 +64,8 @@ class Team():
 
     def display(self) -> None:
         print(self.city, self.name, self.abbr)
+        print("All Time Record (w/l/t)", self.all_time_wins, "/", self.all_time_losses, "/", self.all_time_ties)
+        print("All Time Scoring", self.all_time_touchdowns, "Touchdowns |", self.all_time_fieldgoals, "Field Goals\n")
 
     def edit(self) -> None:
         editing = True
@@ -100,7 +113,7 @@ class Team():
         if editing:
             self.edit()
 
-    def play_game(self, loc) -> colored:
+    def play_game(self) -> int:
         score = 0
 
         drives = random.randint(self.min_drives, self.max_drives)
@@ -111,15 +124,12 @@ class Team():
                 did_touchdown = random.randint(1, 100)
                 if did_touchdown <= self.touchdown_percent:
                     score += 6
+                    self.all_time_touchdowns += 1
                     did_pat = random.randint(1, 100)
                     if did_pat <= self.pat_percent:
                         score += 1
                 else:
                     score += 3
+                    self.all_time_fieldgoals += 1
         
-        if loc == "home":
-            return colored(score, "blue", attrs=["bold"])
-        elif loc == "away":
-            return colored(score, "red", attrs=["bold"])
-        else:
-            raise Exception("unexpected token for value: loc")
+        return score

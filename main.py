@@ -10,8 +10,11 @@ class Prog():
 
         self.load_team_list = {}
         
-        with open("data/teams/load_ref.ksf", "rb") as save_team_list:
-            self.load_team_list = pickle.load(save_team_list)
+        try:
+            with open("data/teams/load_ref.ksf", "rb") as save_team_list:
+                self.load_team_list = pickle.load(save_team_list)
+        except:
+            pass
         
         self.team_list = {}
 
@@ -89,14 +92,26 @@ class Prog():
         home_team = input("Home Team: ")
 
         if home_team in self.team_list:
-            home_score = self.team_list[home_team].play_game("home")
+            home_score = self.team_list[home_team].play_game()
+            home_display = colored(home_score, "blue", attrs=["bold"])
 
         away_team = input("Away Team: ")
 
         if away_team in self.team_list:
-            away_score = self.team_list[away_team].play_game("away")
+            away_score = self.team_list[away_team].play_game()
+            away_display = colored(away_score, "red", attrs=["bold"])
 
-        print("Final Score", home_score, home_team, "to", away_score, away_team)
+        if home_score > away_score:
+            self.team_list[home_team].all_time_wins += 1
+            self.team_list[away_team].all_time_losses += 1
+        elif home_score == away_score:
+            self.team_list[home_team].all_time_ties += 1
+            self.team_list[away_team].all_time_ties += 1
+        else:
+            self.team_list[home_team].all_time_losses += 1
+            self.team_list[away_team].all_time_wins += 1
+
+        print("Final Score", home_display, home_team, "to", away_display, away_team)
 
     def edit_team(self) -> None:
         self.view_teams()

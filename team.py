@@ -1,5 +1,6 @@
 from termcolor import colored
 import random
+import pickle
 
 class Team():
     def __init__(self, city: str, name: str, abbr: str) -> None:
@@ -13,6 +14,21 @@ class Team():
         self.score_percent = 50
         self.touchdown_percent = 50
         self.pat_percent = 94
+
+    def save_team_data(self, file_loc) -> None:
+        team_data = {
+            'city': self.city,
+            'name': self.name,
+            'abbr': self.abbr,
+            'min_drives': self.min_drives,
+            'max_drives': self.max_drives,
+            'score_percent': self.score_percent,
+            'touchdown_percent': self.touchdown_percent,
+            'pat_percent': self.pat_percent
+        }
+
+        with open(file_loc, 'wb') as save_file:
+            pickle.dump(team_data, save_file)
 
     def play_game(self, loc) -> colored:
         score = 0

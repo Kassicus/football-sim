@@ -1,8 +1,40 @@
 from termcolor import colored
 import pickle
 import os
+import pygame
 
 import team
+import lib
+
+pygame.init()
+
+class Window():
+    def __init__(self) -> None:
+        self.screen = lib.display_surface
+        pygame.display.set_caption("Football Simulator")
+
+        self.running = True
+        self.clock = pygame.time.Clock()
+
+    def run(self):
+        while self.running:
+            self.event_loop()
+            self.draw()
+            self.update()
+
+    def event_loop(self):
+        lib.events = pygame.event.get()
+
+        for event in lib.events:
+            if event.type == pygame.QUIT:
+                self.running = False
+
+    def draw(self):
+        self.screen.fill(lib.color.BLACK)
+
+    def update(self):
+        pygame.display.update()
+        lib.delta_time = self.clock.tick(lib.fps_limit) / 1000
 
 class Prog():
     def __init__(self) -> None:
@@ -136,6 +168,6 @@ class Prog():
             print("Invalid Command...\n")
 
 if __name__ == '__main__':
-    prog = Prog()
-    prog.load_team()
-    prog.run()
+    win = Window()
+    win.run()
+    pygame.quit()

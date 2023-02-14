@@ -5,6 +5,7 @@ import pygame
 
 import team
 import lib
+import standings
 
 pygame.init()
 
@@ -16,7 +17,20 @@ class Window():
         self.running = True
         self.clock = pygame.time.Clock()
 
+        self.prog = Prog()
+        self.standings = pygame.sprite.Group()
+
+    def create_standings(self):
+        y_offset = 0
+        for team in self.prog.team_list:
+            s = standings.StandingBar(0, y_offset, self.prog.team_list[team].city, self.prog.team_list[team].name, 0, 0, 0)
+            self.standings.add(s)
+            y_offset += 30
+
     def run(self):
+        self.prog.load_team()
+        self.create_standings()
+
         while self.running:
             self.event_loop()
             self.draw()
@@ -31,8 +45,11 @@ class Window():
 
     def draw(self):
         self.screen.fill(lib.color.BLACK)
+        self.standings.draw(self.screen)
 
     def update(self):
+        self.standings.update()
+        
         pygame.display.update()
         lib.delta_time = self.clock.tick(lib.fps_limit) / 1000
 

@@ -12,7 +12,7 @@
 ## Teams
 - [x] Ability to create and edit teams
 - [x] Ability to save teams
-- [ ] Allow teams to save stats
+- [x] Allow teams to save stats
 
 ## Players
 - [ ] Ability to create and edit players

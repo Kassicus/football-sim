@@ -3,17 +3,17 @@ import random
 import pickle
 
 class Team():
-    def __init__(self, city: str, name: str, abbr: str) -> None:
-        self.city = city
-        self.name = name
-        self.abbr = abbr
+    def __init__(self) -> None:
+        self.city = ""
+        self.name = ""
+        self.abbr = ""
 
-        self.min_drives = 10
-        self.max_drives = 12
+        self.min_drives = 0
+        self.max_drives = 0
 
-        self.score_percent = 50
-        self.touchdown_percent = 50
-        self.pat_percent = 94
+        self.score_percent = 0
+        self.touchdown_percent = 0
+        self.pat_percent = 0
 
     def save_team_data(self, file_loc) -> None:
         team_data = {
@@ -29,6 +29,30 @@ class Team():
 
         with open(file_loc, 'wb') as save_file:
             pickle.dump(team_data, save_file)
+
+    def load_team_data(self, file_loc) -> None:
+        with open(file_loc, "rb") as save_file:
+            team_data = pickle.load(save_file)
+
+        self.city = team_data['city']
+        self.name = team_data['name']
+        self.abbr = team_data['abbr']
+        self.min_drives = team_data['min_drives']
+        self.max_drives = team_data['max_drives']
+        self.score_percent = team_data['score_percent']
+        self.touchdown_percent = team_data['touchdown_percent']
+        self.pat_percent = team_data['pat_percent']
+
+    def set_default_stats(self) -> None:
+        self.min_drives = 10
+        self.max_drives = 12
+
+        self.score_percent = 50
+        self.touchdown_percent = 50
+        self.pat_percent = 94
+
+    def display(self) -> None:
+        print(self.city, self.name, self.abbr)
 
     def play_game(self, loc) -> colored:
         score = 0

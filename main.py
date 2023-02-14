@@ -1,56 +1,82 @@
-import team
 import pickle
+import os
 
-load_team_ref = {}
+import team
 
-teams = {}
+class Prog():
+    def __init__(self) -> None:
+        self.running = True
 
-running = True
+        self.load_team_list = {}
+        
+        with open("data/teams/load_ref.ksf", "rb") as save_team_list:
+            self.load_team_list = pickle.load(save_team_list)
+        
+        self.team_list = {}
 
-def create_team() -> None:
-    in_city = str(input("Enter a City: "))
-    in_name = str(input("Enter a Team Name: "))
-    in_abbr = str(input("Enter a Team Abbreviation: "))
+        self.commands = {
+            "create": self.create_team,
+            "view": self.view_teams,
+            "exit": self.terminate,
+            "reset": self.reset_teams
+        }
 
-    t = team.Team(in_city, in_name, in_abbr)
+    def load_team(self) -> None:
+        for abbr in self.load_team_list:
+            t = team.Team()
+            t.load_team_data("data/teams/" + abbr + ".ksf")
+            self.team_list[abbr] = t
 
-    teams[in_abbr] = t
-    load_team_ref[in_abbr] = in_abbr
+    def save_teams(self) -> None:
+        for team in self.team_list:
+            self.team_list[team].save_team_data("data/teams/" + team + ".ksf")
 
-def view_teams() -> None:
-    for team in teams:
-        print(teams[team].city, teams[team].name, teams[team].abbr)
+        with open("data/teams/load_ref.ksf", "wb") as save_team_list:
+            pickle.dump(self.load_team_list, save_team_list)
 
-def save_teams() -> None:
-    for team in teams:
-        teams[team].save_team_data("data/teams/" + teams[team].abbr + ".ksf")
+    def create_team(self) -> None:
+        city = input("Enter a City: ")
+        name = input("Enter a Name: ")
+        abbr = input("Enter an Abbreviation: ")
 
-    with open("data/teams/load_ref.ksf", 'wb') as save_team_ref:
-        pickle.dump(load_team_ref, save_team_ref)
+        t = team.Team()
 
-def load_teams() -> None:
-    global load_team_ref
-    with open("data/teams/load_ref.ksf", "rb") as save_team_ref:
-        load_team_ref = pickle.load(save_team_ref)
+        t.city = city
+        t.name = name
+        t.abbr = abbr
+        t.set_default_stats()
 
-def menu() -> None:
-    global running
-    while running:
-        in_user = int(input("""
-        1. Create Team
-        2. View Teams
-        3. Exit
-        """))
+        self.team_list[abbr] = t
+        self.load_team_list[abbr] = abbr
 
-        if in_user == 1:
-            create_team()
-        elif in_user == 2:
-            view_teams()
-        elif in_user == 3:
-            save_teams()
-            running = False
+    def view_teams(self) -> None:
+        for team in self.team_list:
+            self.team_list[team].display()
+
+    def reset_teams(self) -> None:
+        for abbr in self.load_team_list:
+            if os.path.exists("data/teams/" + abbr + ".ksf"):
+                os.remove("data/teams/" + abbr + ".ksf")
+
+        self.load_team_list = {}
+        self.team_list = {}
+
+    def run(self) -> None:
+        while self.running:
+            self.menu()
+
+    def terminate(self) -> None:
+        self.save_teams()
+        self.running = False
+
+    def menu(self) -> None:
+        user_in = input(">> ")
+        if user_in in self.commands:
+            self.commands[user_in]()
         else:
-            raise Exception("Input out of range")
+            print("Invalid Command...\n")
 
 if __name__ == '__main__':
-    menu()
+    prog = Prog()
+    prog.load_team()
+    prog.run()

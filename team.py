@@ -54,6 +54,52 @@ class Team():
     def display(self) -> None:
         print(self.city, self.name, self.abbr)
 
+    def edit(self) -> None:
+        editing = True
+
+        print("1 - City: ", self.city)
+        print("2 - Name: ", self.name)
+        print("3 - Abbreviation: ", self.abbr)
+        print("4 - Min Drives: ", self.min_drives)
+        print("5 - Max Drives: ", self.max_drives)
+        print("6 - Score Percent: ", self.score_percent)
+        print("7 - Touchdown Percent: ", self.touchdown_percent)
+        print("8 - PAT Percent: ", self.pat_percent)
+        print("9 - End Editing Team")
+
+        user_in = int(input("Which stat would you like to edit? "))
+
+        match user_in:
+            case 1:
+                city = input("Enter new City: ")
+                self.city = city
+            case 2:
+                name = input("Enter new Name: ")
+                self.name = name
+            case 3:
+                abbr = input("Enter new Abbreviation: ")
+                self.abbr = abbr
+            case 4:
+                min_drives = int(input("Enter new Min drives: "))
+                self.min_drives = min_drives
+            case 5:
+                max_drives = int(input("Enter new Max drives: "))
+                self.max_drives = max_drives
+            case 6:
+                score = int(input("Enter a new Score Percentage: "))
+                self.score_percent = score
+            case 7:
+                touchdown = int(input("Enter a new Touchdown Percentage: "))
+                self.touchdown_percent = touchdown
+            case 8:
+                pat = int(input("Enter a new PAT Percentage: "))
+                self.pat_percent = pat
+            case 9:
+                editing = False
+
+        if editing:
+            self.edit()
+
     def play_game(self, loc) -> colored:
         score = 0
 

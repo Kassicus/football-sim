@@ -1,3 +1,4 @@
+from termcolor import colored
 import pickle
 import os
 
@@ -14,12 +15,35 @@ class Prog():
         
         self.team_list = {}
 
+        self.menu_prompt = colored(">> ", "green", attrs=["bold"])
+
         self.commands = {
             "create": self.create_team,
             "view": self.view_teams,
             "exit": self.terminate,
-            "reset": self.reset_teams
+            "reset": self.reset_teams,
+            "help": self.help,
+            "clear": self.clear_screen,
+            "play": self.play_game,
+            "edit": self.edit_team
         }
+
+    def help(self) -> None:
+        print("""
+        create: create a new team
+        view: view all existing teams
+        reset: remove all existing teams
+        clear: clear the screen
+        play: play a game
+        edit: edit a team
+
+        exit: terminate the program (saves automatically)
+        help: display this prompt
+        """)
+
+    def clear_screen(self) -> None:
+        for x in range(150):
+            print("\n")
 
     def load_team(self) -> None:
         for abbr in self.load_team_list:
@@ -61,6 +85,26 @@ class Prog():
         self.load_team_list = {}
         self.team_list = {}
 
+    def play_game(self) -> None:
+        home_team = input("Home Team: ")
+
+        if home_team in self.team_list:
+            home_score = self.team_list[home_team].play_game("home")
+
+        away_team = input("Away Team: ")
+
+        if away_team in self.team_list:
+            away_score = self.team_list[away_team].play_game("away")
+
+        print("Final Score", home_score, home_team, "to", away_score, away_team)
+
+    def edit_team(self) -> None:
+        self.view_teams()
+        user_in = input("Enter a team code: ")
+
+        if user_in in self.team_list:
+            self.team_list[user_in].edit()
+
     def run(self) -> None:
         while self.running:
             self.menu()
@@ -70,7 +114,7 @@ class Prog():
         self.running = False
 
     def menu(self) -> None:
-        user_in = input(">> ")
+        user_in = input(self.menu_prompt)
         if user_in in self.commands:
             self.commands[user_in]()
         else:

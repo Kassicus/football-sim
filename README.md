@@ -10,8 +10,8 @@
 - [ ] Save data for seasons
 
 ## Teams
-- [ ] Ability to create and edit teams
-- [ ] Ability to save teams
+- [x] Ability to create and edit teams
+- [x] Ability to save teams
 - [ ] Allow teams to save stats
 
 ## Players

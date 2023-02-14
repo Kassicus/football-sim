@@ -1,27 +1,9 @@
-from termcolor import colored
-import random
+import team
 
-def get_score() -> int:
-    score = 0
+team_one = team.Team("Test", "Team A", "AAA")
+team_two = team.Team("Test", "Team B", "BBB")
 
-    drives = random.randint(10, 12)
+home_score = team_one.play_game("home")
+away_score = team_two.play_game("away")
 
-    for x in range(drives):
-        did_score = random.randint(0, 1)
-
-        if did_score == 1:
-            did_touchdown = random.randint(0, 1)
-            if did_touchdown == 1:
-                score += 6
-                did_pat = random.randint(1, 100)
-                if did_pat <= 94:
-                    score += 1
-            else:
-                score += 3
-
-    return score
-
-home_score = colored(get_score(), "blue", attrs=["bold"])
-away_score = colored(get_score(), "red", attrs=["bold"])
-
-print("Final Score", home_score, "to", away_score)
+print("Final Score", team_one.abbr, home_score, "to", team_two.abbr, away_score)

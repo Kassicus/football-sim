@@ -16,7 +16,7 @@ class StandingBar(pygame.sprite.Sprite):
 
         self.pos = pygame.math.Vector2(x, y)
         self.image = pygame.Surface([600, 30])
-        self.image.fill(lib.color.WHITE)
+        self.image.fill(lib.color.get_random_color())
         self.rect = self.image.get_rect()
         self.rect.topleft = self.pos
 
@@ -37,3 +37,5 @@ class StandingBar(pygame.sprite.Sprite):
             self.pos.y += 16
         elif scroll_dir < 0:
             self.pos.y -= 16
+
+        self.rect.topleft = self.pos

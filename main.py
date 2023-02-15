@@ -1,8 +1,63 @@
 from termcolor import colored
 import pickle
 import os
+import pygame
 
 import team
+import lib
+import standings
+
+pygame.init()
+
+class Window():
+    def __init__(self) -> None:
+        self.screen = lib.display_surface
+        pygame.display.set_caption("Football Simulator")
+
+        self.running = True
+        self.clock = pygame.time.Clock()
+
+        self.prog = Prog()
+        self.standings = pygame.sprite.Group()
+
+        self.scroll_dir = 0
+
+    def create_standings(self):
+        y_offset = 0
+        for team in self.prog.team_list:
+            s = standings.StandingBar(0, y_offset, self.prog.team_list[team].city, self.prog.team_list[team].name, 0, 0, 0)
+            self.standings.add(s)
+            y_offset += 30
+
+    def run(self):
+        self.prog.load_team()
+        self.create_standings()
+
+        while self.running:
+            self.scroll_dir = 0
+            self.event_loop()
+            self.draw()
+            self.update()
+
+    def event_loop(self):
+        lib.events = pygame.event.get()
+
+        for event in lib.events:
+            if event.type == pygame.QUIT:
+                self.running = False
+            
+            if event.type == pygame.MOUSEWHEEL:
+                self.scroll_dir = event.y
+
+    def draw(self):
+        self.screen.fill(lib.color.BLACK)
+        self.standings.draw(self.screen)
+
+    def update(self):
+        self.standings.update(self.scroll_dir)
+        
+        pygame.display.update()
+        lib.delta_time = self.clock.tick(lib.fps_limit) / 1000
 
 class Prog():
     def __init__(self) -> None:
@@ -136,6 +191,6 @@ class Prog():
             print("Invalid Command...\n")
 
 if __name__ == '__main__':
-    prog = Prog()
-    prog.load_team()
-    prog.run()
+    win = Window()
+    win.run()
+    pygame.quit()

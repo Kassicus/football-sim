@@ -22,7 +22,7 @@ class Team():
         self.all_time_losses = 0
         self.all_time_ties = 0
 
-    def save_team_data(self, file_loc) -> None:
+    def save_team_data(self, file_loc: str) -> None:
         team_data = {
             'city': self.city,
             'name': self.name,
@@ -39,7 +39,7 @@ class Team():
         with open(file_loc, 'wb') as save_file:
             pickle.dump(team_data, save_file)
 
-    def load_team_data(self, file_loc) -> None:
+    def load_team_data(self, file_loc: str) -> None:
         with open(file_loc, "rb") as save_file:
             team_data = pickle.load(save_file)
 

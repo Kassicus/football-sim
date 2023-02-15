@@ -20,6 +20,8 @@ class Window():
         self.prog = Prog()
         self.standings = pygame.sprite.Group()
 
+        self.scroll_dir = 0
+
     def create_standings(self):
         y_offset = 0
         for team in self.prog.team_list:
@@ -32,6 +34,7 @@ class Window():
         self.create_standings()
 
         while self.running:
+            self.scroll_dir = 0
             self.event_loop()
             self.draw()
             self.update()
@@ -42,13 +45,16 @@ class Window():
         for event in lib.events:
             if event.type == pygame.QUIT:
                 self.running = False
+            
+            if event.type == pygame.MOUSEWHEEL:
+                self.scroll_dir = event.y
 
     def draw(self):
         self.screen.fill(lib.color.BLACK)
         self.standings.draw(self.screen)
 
     def update(self):
-        self.standings.update()
+        self.standings.update(self.scroll_dir)
         
         pygame.display.update()
         lib.delta_time = self.clock.tick(lib.fps_limit) / 1000

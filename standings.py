@@ -28,5 +28,12 @@ class StandingBar(pygame.sprite.Sprite):
         self.display_surface.blit(self.losses, (self.pos.x + 280, self.pos.y + 10))
         self.display_surface.blit(self.ties, (self.pos.x + 310, self.pos.y + 10))
 
-    def update(self) -> None:
+    def update(self, scroll_dir: int) -> None:
         self.draw_stats()
+        self.scroll(scroll_dir)
+    
+    def scroll(self, scroll_dir: int) -> None:
+        if scroll_dir > 0:
+            self.pos.y += 16
+        elif scroll_dir < 0:
+            self.pos.y -= 16
